@@ -2,7 +2,7 @@
 
 <p align="center" width="100%">
 <a target="_blank"><img src="imgs/pipeline.png" alt="CausalMM" style="width: 35%; min-width: 200px; display: block; margin: auto;"></a>
-</p
+</p>
 
 The office repo for CausalMM, a plug-and-play method for deciphering attention causality in MLLMs. 
 Full paper can be found at: [https://arxiv.org/abs/2410.04780](https://arxiv.org/abs/2410.04780).
@@ -21,10 +21,9 @@ Full paper can be found at: [https://arxiv.org/abs/2410.04780](https://arxiv.org
 
 
 ## Structural Causal Model
-
 <p align="center" width="100%">
 <a target="_blank"><img src="imgs/causal_graph.png" alt="SCM" style="width: 80%; min-width: 200px; display: block; margin: auto;"></a>
-</p
+</p>
 
 
 
