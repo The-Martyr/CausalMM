@@ -20,7 +20,7 @@ Full paper can be found at: [https://arxiv.org/abs/2410.04780](https://arxiv.org
 
 
 
-## Structual Causal Model
+## Structural Causal Model
 
 <p align="center" width="100%">
 <a target="_blank"><img src="imgs/causal_graph.png" alt="SCM" style="width: 80%; min-width: 200px; display: block; margin: auto;"></a>
