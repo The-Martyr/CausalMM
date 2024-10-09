@@ -20,6 +20,13 @@ Full paper can be found at: [https://arxiv.org/abs/2410.04780](https://arxiv.org
 <a target="_blank"><img src="imgs/causal_graph.png" alt="SCM" style="width: 80%; min-width: 200px; display: block; margin: auto;"></a>
 </p>
 
+## Environment Setup
+```
+cd env
+conda env create -f causalmm_llava.yml
+conda activate causalmm_llava.yml
+```
+
 ## Counterfactual Attention
 Four methods for generating counterfactual attention (an example):
 ```
