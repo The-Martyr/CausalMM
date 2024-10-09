@@ -27,6 +27,38 @@ Full paper can be found at: [https://arxiv.org/abs/2410.04780](https://arxiv.org
 
 
 
+## Counterfactual Attention
+Four methods for generating counterfactual attention (an example):
+```
+def edit_attention(self, attention_maps, method='shuffle'):
+      batch_size, num_heads, height, width = attention_maps.shape　#depends on how the vision encoder extracts attention
+
+      if method == 'random':
+      edited_attention_maps = torch.rand(batch_size, num_heads, height, width, device=attention_maps.device) * 2
+
+      elif method == 'uniform':
+      avg_value = torch.mean(attention_maps, dim=(2, 3), keepdim=True)
+      edited_attention_maps = avg_value.expand(batch_size, num_heads, height, width)
+
+      elif method == 'reversed':
+      max_value_height, _ = torch.max(attention_maps, dim=2, keepdim=True)
+      
+      max_value, _ = torch.max(max_value_height, dim=3, keepdim=True)
+
+      edited_attention_maps = max_value - attention_maps
+
+      elif method == 'shuffle':
+      edited_attention_maps = attention_maps.clone()
+      for i in range(num_heads):
+            edited_attention_maps[:, i] = edited_attention_maps[:, i].view(batch_size, -1).gather(1, torch.randperm(height * width, device=attention_maps.device).expand(batch_size, -1)).view(batch_size, height, width)
+
+      else:
+      raise ValueError("Invalid method. Choose from ['random', 'uniform', 'reversed', 'shuffle']")
+
+      return edited_attention_maps
+```
+The complete experimental code can be found in [cf_encoder](llava-1.5/cf_encoder.py).
+
 ## Citation
 Welcome to star our repo and cite our work:
 ```
