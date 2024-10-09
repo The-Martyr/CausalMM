@@ -1,5 +1,4 @@
 # CausalMM: Mitigating Modality Prior-Induced Hallucinations in Multimodal Large Language Models via Deciphering Attention Causality
-
 <p align="center" width="100%">
 <a target="_blank"><img src="imgs/pipeline.png" alt="CausalMM" style="width: 35%; min-width: 200px; display: block; margin: auto;"></a>
 </p>
@@ -12,20 +11,14 @@ Full paper can be found at: [https://arxiv.org/abs/2410.04780](https://arxiv.org
 <a href='LICENCE'><img src='https://img.shields.io/badge/License-Apache 2.0-g.svg'></a>
 </div>
 
-
-
-##　Update
+## Update
 * [2024-10] Detailed instructions coming soon.
 * [2024-10] Key code for editing attention released.
-
-
 
 ## Structural Causal Model
 <p align="center" width="100%">
 <a target="_blank"><img src="imgs/causal_graph.png" alt="SCM" style="width: 80%; min-width: 200px; display: block; margin: auto;"></a>
 </p>
-
-
 
 ## Counterfactual Attention
 Four methods for generating counterfactual attention (an example):
@@ -73,10 +66,7 @@ Welcome to star our repo and cite our work:
 }
 ```
 
-
-
 ## Acknowledgement
-
 * [VCD](https://github.com/DAMO-NLP-SG/VCD)
 * [OPEAR](https://github.com/shikiw/OPERA?tab=readme-ov-file)
 * [LLaVA](https://github.com/haotian-liu/LLaVA)
