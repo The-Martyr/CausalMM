@@ -12,7 +12,6 @@ Full paper can be found at: [https://arxiv.org/abs/2410.04780](https://arxiv.org
 </div>
 
 ## Update
-* [2024-10] Detailed instructions coming soon.
 * [2024-10] Key code for editing attention released.
 
 ## Structural Causal Model
