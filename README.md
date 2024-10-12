@@ -61,14 +61,11 @@ The complete experimental code can be found in [cf_encoder](llava-1.5/cf_encoder
 ## Citation
 Welcome to star our repo and cite our work:
 ```
-@misc{zhou2024mitigatingmodalitypriorinducedhallucinations,
-      title={Mitigating Modality Prior-Induced Hallucinations in Multimodal Large Language Models via Deciphering Attention Causality}, 
-      author={Guanyu Zhou and Yibo Yan and Xin Zou and Kun Wang and Aiwei Liu and Xuming Hu},
-      year={2024},
-      eprint={2410.04780},
-      archivePrefix={arXiv},
-      primaryClass={cs.CV},
-      url={https://arxiv.org/abs/2410.04780}, 
+@article{zhou2024mitigating,
+  title={Mitigating Modality Prior-Induced Hallucinations in Multimodal Large Language Models via Deciphering Attention Causality},
+  author={Zhou, Guanyu and Yan, Yibo and Zou, Xin and Wang, Kun and Liu, Aiwei and Hu, Xuming},
+  journal={arXiv preprint arXiv:2410.04780},
+  year={2024}
 }
 ```
 
