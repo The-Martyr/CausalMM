@@ -3,7 +3,7 @@
 <a target="_blank"><img src="imgs/pipeline.png" alt="CausalMM" style="width: 35%; min-width: 200px; display: block; margin: auto;"></a>
 </p>
 
-The office repo for CausalMM, a plug-and-play method for deciphering attention causality in MLLMs. 
+The official repo for CausalMM, a plug-and-play method for deciphering attention causality in MLLMs. 
 Full paper can be found at: [https://arxiv.org/abs/2410.04780](https://arxiv.org/abs/2410.04780).
 
 <div style='display:flex; gap: 0.25rem; '>
