@@ -42,23 +42,22 @@ def edit_attention(self, attention_maps, method='shuffle'):
       batch_size, num_heads, height, width = attention_maps.shape　#depends on how the vision encoder extracts attention
 
       if method == 'random':
-      edited_attention_maps = torch.rand(batch_size, num_heads, height, width, device=attention_maps.device) * 2
+            edited_attention_maps = torch.rand(batch_size, num_heads, height, width, device=attention_maps.device) * 2
 
       elif method == 'uniform':
-      avg_value = torch.mean(attention_maps, dim=(2, 3), keepdim=True)
-      edited_attention_maps = avg_value.expand(batch_size, num_heads, height, width)
+            avg_value = torch.mean(attention_maps, dim=(2, 3), keepdim=True)
+            edited_attention_maps = avg_value.expand(batch_size, num_heads, height, width)
 
       elif method == 'reversed':
-      max_value_height, _ = torch.max(attention_maps, dim=2, keepdim=True)
-      
-      max_value, _ = torch.max(max_value_height, dim=3, keepdim=True)
+            max_value_height, _ = torch.max(attention_maps, dim=2, keepdim=True)
+            max_value, _ = torch.max(max_value_height, dim=3, keepdim=True)
 
-      edited_attention_maps = max_value - attention_maps
+            edited_attention_maps = max_value - attention_maps
 
       elif method == 'shuffle':
-      edited_attention_maps = attention_maps.clone()
-      for i in range(num_heads):
-            edited_attention_maps[:, i] = edited_attention_maps[:, i].view(batch_size, -1).gather(1, torch.randperm(height * width, device=attention_maps.device).expand(batch_size, -1)).view(batch_size, height, width)
+            edited_attention_maps = attention_maps.clone()
+            for i in range(num_heads):
+                  edited_attention_maps[:, i] = edited_attention_maps[:, i].view(batch_size, -1).gather(1, torch.randperm(height * width, device=attention_maps.device).expand(batch_size, -1)).view(batch_size, height, width)
 
       else:
       raise ValueError("Invalid method. Choose from ['random', 'uniform', 'reversed', 'shuffle']")
@@ -69,23 +68,23 @@ The complete experimental code can be found in [cf_encoder](llava-1.5/cf_encoder
 
 #### Visualization of Vision Counterfactual Attention
 
-<div style='display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.25rem;'>
-    <p align="center">
+<div style='display: flex; flex-wrap: wrap; gap: 0.25rem;'>
+    <div style='flex: 1 1 45%; text-align: center;'>
         <a target="_blank"><img src="imgs/random.png" alt="random" style="width: 100%; min-width: 200px;"></a>
-        <span style="display: block; text-align: center;">random</span>
-    </p>
-    <p align="center">
+        <span>random</span>
+    </div>
+    <div style='flex: 1 1 45%; text-align: center;'>
         <a target="_blank"><img src="imgs/reverse.png" alt="reverse" style="width: 100%; min-width: 200px;"></a>
-        <span style="display: block; text-align: center;">reverse</span>
-    </p>
-    <p align="center">
+        <span>reverse</span>
+    </div>
+    <div style='flex: 1 1 45%; text-align: center;'>
         <a target="_blank"><img src="imgs/uniform.png" alt="uniform" style="width: 100%; min-width: 200px;"></a>
-        <span style="display: block; text-align: center;">uniform</span>
-    </p>
-    <p align="center">
+        <span>uniform</span>
+    </div>
+    <div style='flex: 1 1 45%; text-align: center;'>
         <a target="_blank"><img src="imgs/shuffle.png" alt="shuffle" style="width: 100%; min-width: 200px;"></a>
-        <span style="display: block; text-align: center;">shuffle</span>
-    </p>
+        <span>shuffle</span>
+    </div>
 </div>
 
 ### LLM Counterfactual Attention
@@ -131,38 +130,38 @@ def uniform_attention(attention):
 
 def apply_counterfactual_attention(attention, method):
       if method == 'reverse':
-      return reverse_attention(attention)
+            return reverse_attention(attention)
       elif method == 'reverse_and_normalize':
-      return reverse_and_normalize_attention(attention)
+            return reverse_and_normalize_attention(attention)
       elif method == 'random':
-      return random_attention(attention)
+            return random_attention(attention)
       elif method == 'uniform':
-      return uniform_attention(attention)
+            return uniform_attention(attention)
       else:
-      raise ValueError(f"Unknown method: {method}")
+            raise ValueError(f"Unknown method: {method}")
 ```
 
 You can insert it directly in the modeling_qwen2_vl.py file of the [transformers](https://github.com/huggingface/transformers).
 
 #### Visualization of LLM Counterfactual Attention
 
-<div style='display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.25rem;'>
-    <p align="center">
+<div style='display: flex; flex-wrap: wrap; gap: 0.25rem;'>
+    <div style='flex: 1 1 22%; text-align: center;'>
         <a target="_blank"><img src="imgs/attn_weights_normal.png" alt="normal" style="width: 100%; min-width: 200px;"></a>
-        <span style="display: block; text-align: center;">normal</span>
-    </p>
-    <p align="center">
+        <span>normal</span>
+    </div>
+    <div style='flex: 1 1 22%; text-align: center;'>
         <a target="_blank"><img src="imgs/attn_weights_reverse.png" alt="reverse" style="width: 100%; min-width: 200px;"></a>
-        <span style="display: block; text-align: center;">reverse</span>
-    </p>
-    <p align="center">
+        <span>reverse</span>
+    </div>
+    <div style='flex: 1 1 22%; text-align: center;'>
         <a target="_blank"><img src="imgs/attn_weights_uniform.png" alt="uniform" style="width: 100%; min-width: 200px;"></a>
-        <span style="display: block; text-align: center;">uniform</span>
-    </p>
-    <p align="center">
+        <span>uniform</span>
+    </div>
+    <div style='flex: 1 1 22%; text-align: center;'>
         <a target="_blank"><img src="imgs/attn_weights_random.png" alt="random" style="width: 100%; min-width: 200px;"></a>
-        <span style="display: block; text-align: center;">random</span>
-    </p>
+        <span>random</span>
+    </div>
 </div>
 
 ## Modality Priors
