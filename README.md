@@ -60,32 +60,36 @@ def edit_attention(self, attention_maps, method='shuffle'):
                   edited_attention_maps[:, i] = edited_attention_maps[:, i].view(batch_size, -1).gather(1, torch.randperm(height * width, device=attention_maps.device).expand(batch_size, -1)).view(batch_size, height, width)
 
       else:
-      raise ValueError("Invalid method. Choose from ['random', 'uniform', 'reversed', 'shuffle']")
+            raise ValueError("Invalid method. Choose from ['random', 'uniform', 'reversed', 'shuffle']")
 
-      return edited_attention_maps
+            return edited_attention_maps
 ```
 The complete experimental code can be found in [cf_encoder](llava-1.5/cf_encoder.py).
 
 #### Visualization of Vision Counterfactual Attention
 
-<div style='display: flex; flex-wrap: wrap; gap: 0.25rem;'>
-    <div style='flex: 1 1 45%; text-align: center;'>
-        <a target="_blank"><img src="imgs/random.png" alt="random" style="width: 100%; min-width: 200px;"></a>
-        <span>random</span>
-    </div>
-    <div style='flex: 1 1 45%; text-align: center;'>
-        <a target="_blank"><img src="imgs/reverse.png" alt="reverse" style="width: 100%; min-width: 200px;"></a>
-        <span>reverse</span>
-    </div>
-    <div style='flex: 1 1 45%; text-align: center;'>
-        <a target="_blank"><img src="imgs/uniform.png" alt="uniform" style="width: 100%; min-width: 200px;"></a>
-        <span>uniform</span>
-    </div>
-    <div style='flex: 1 1 45%; text-align: center;'>
-        <a target="_blank"><img src="imgs/shuffle.png" alt="shuffle" style="width: 100%; min-width: 200px;"></a>
-        <span>shuffle</span>
-    </div>
-</div>
+<table>
+    <tr>
+        <td align="center">
+            <a target="_blank"><img src="imgs/random.png" alt="random" style="width: 100%; min-width: 200px;"></a>
+            <br>random
+        </td>
+        <td align="center">
+            <a target="_blank"><img src="imgs/reverse.png" alt="reverse" style="width: 100%; min-width: 200px;"></a>
+            <br>reverse
+        </td>
+    </tr>
+    <tr>
+        <td align="center">
+            <a target="_blank"><img src="imgs/uniform.png" alt="uniform" style="width: 100%; min-width: 200px;"></a>
+            <br>uniform
+        </td>
+        <td align="center">
+            <a target="_blank"><img src="imgs/shuffle.png" alt="shuffle" style="width: 100%; min-width: 200px;"></a>
+            <br>shuffle
+        </td>
+    </tr>
+</table>
 
 ### LLM Counterfactual Attention
 
@@ -145,24 +149,26 @@ You can insert it directly in the modeling_qwen2_vl.py file of the [transformers
 
 #### Visualization of LLM Counterfactual Attention
 
-<div style='display: flex; flex-wrap: wrap; gap: 0.25rem;'>
-    <div style='flex: 1 1 22%; text-align: center;'>
-        <a target="_blank"><img src="imgs/attn_weights_normal.png" alt="normal" style="width: 100%; min-width: 200px;"></a>
-        <span>normal</span>
-    </div>
-    <div style='flex: 1 1 22%; text-align: center;'>
-        <a target="_blank"><img src="imgs/attn_weights_reverse.png" alt="reverse" style="width: 100%; min-width: 200px;"></a>
-        <span>reverse</span>
-    </div>
-    <div style='flex: 1 1 22%; text-align: center;'>
-        <a target="_blank"><img src="imgs/attn_weights_uniform.png" alt="uniform" style="width: 100%; min-width: 200px;"></a>
-        <span>uniform</span>
-    </div>
-    <div style='flex: 1 1 22%; text-align: center;'>
-        <a target="_blank"><img src="imgs/attn_weights_random.png" alt="random" style="width: 100%; min-width: 200px;"></a>
-        <span>random</span>
-    </div>
-</div>
+<table>
+    <tr>
+        <td align="center">
+            <a target="_blank"><img src="imgs/attn_weights_normal.png" alt="normal" style="width: 100%; min-width: 200px;"></a>
+            <br>normal
+        </td>
+        <td align="center">
+            <a target="_blank"><img src="imgs/attn_weights_reverse.png" alt="reverse" style="width: 100%; min-width: 200px;"></a>
+            <br>reverse
+        </td>
+        <td align="center">
+            <a target="_blank"><img src="imgs/attn_weights_uniform.png" alt="uniform" style="width: 100%; min-width: 200px;"></a>
+            <br>uniform
+        </td>
+        <td align="center">
+            <a target="_blank"><img src="imgs/attn_weights_random.png" alt="random" style="width: 100%; min-width: 200px;"></a>
+            <br>random
+        </td>
+    </tr>
+</table>
 
 ## Modality Priors
 If you want to learn more about the work on modal priors, click [here](https://github.com/The-Martyr/Awesome-Modality-Priors-in-MLLMs).
