@@ -1,4 +1,4 @@
-# CausalMM: Mitigating Modality Prior-Induced Hallucinations in Multimodal Large Language Models via Deciphering Attention Causality
+## [ICLR'25] Mitigating Modality Prior-Induced Hallucinations in Multimodal Large Language Models via Deciphering Attention Causality
 <p align="center" width="100%">
 <a target="_blank"><img src="imgs/pipeline.png" alt="CausalMM" style="width: 35%; min-width: 200px; display: block; margin: auto;"></a>
 </p>
