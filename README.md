@@ -12,7 +12,7 @@ Full paper can be found at: [https://arxiv.org/abs/2410.04780](https://arxiv.org
 </div>
 
 ## 🗓 To-Do List
-- [ ] Full code release (expected to be open source within a week)
+- [x] Full code release (llava with vision)
 - [x] Key code for editing attention released
 - [x] Preprint of the paper released, check it [here](https://arxiv.org/abs/2410.04780)
 
