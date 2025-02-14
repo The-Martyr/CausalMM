@@ -30,7 +30,20 @@ cd env
 conda env create -f causalmm_llava.yml
 conda activate causalmm_llava.yml
 ```
-You can build the LLaVA-1.5 environment following [this link](https://github.com/DAMO-NLP-SG/VCD).
+Or you can simply build the LLaVA-1.5 environment following [VCD](https://github.com/DAMO-NLP-SG/VCD).
+
+## Run CausalMM
+
+### POPE
+
+1. Download POPE bench ([COCO2014](https://huggingface.co/datasets/HuggingFaceM4/COCO) / [AOKVQA](https://huggingface.co/datasets/HuggingFaceM4/A-OKVQA) to Dir CausalMM (like CausalMM/COCO/val2014).
+
+2. Run the script (with one GPU <default 0>)
+```
+conda activate causalmm_llava
+cd llava-1.5/experiments/scripts
+CUDA_VISIBLE_DEVICES=0 bash llava1.5_eval.bash
+```
 
 ## Counterfactual Attention
 
