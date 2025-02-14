@@ -78,15 +78,11 @@ class LlavaMetaForCausalLM(ABC):
 
     def get_vision_tower(self):
         return self.get_model().get_vision_tower()
-    
-    #counterfactual
-    def encode_images(self, images):
-        image_features, weighted_features = self.get_model().get_vision_tower()(images)
-        image_features = self.get_model().mm_projector(image_features)
 
-        weighted_features = self.get_model().mm_projector(weighted_features)
-        return image_features, weighted_features
-    
+    def encode_images(self, images):
+        image_features = self.get_model().get_vision_tower()(images)
+        image_features = self.get_model().mm_projector(image_features)
+        return image_features
 
     def prepare_inputs_labels_for_multimodal(
         self, input_ids, attention_mask, past_key_values, labels, images
@@ -95,124 +91,77 @@ class LlavaMetaForCausalLM(ABC):
         if vision_tower is None or images is None or input_ids.shape[1] == 1:
             if past_key_values is not None and vision_tower is not None and images is not None and input_ids.shape[1] == 1:
                 attention_mask = torch.ones((attention_mask.shape[0], past_key_values[-1][-1].shape[-2] + 1), dtype=attention_mask.dtype, device=attention_mask.device)
-
-            return input_ids, attention_mask, past_key_values, None, None, labels
+            return input_ids, attention_mask, past_key_values, None, labels
 
         if type(images) is list or images.ndim == 5:
             concat_images = torch.cat([image for image in images], dim=0)
-
-            image_features, weighted_features = self.encode_images(concat_images)
-
+            image_features = self.encode_images(concat_images)
             split_sizes = [image.shape[0] for image in images]
             image_features = torch.split(image_features, split_sizes, dim=0)
             image_features = [x.flatten(0, 1) for x in image_features]
-
-            weighted_features = torch.split(weighted_features, split_sizes, dim=0)
-            weighted_features = [x.flatten(0, 1) for x in weighted_features]
-
         else:
-            image_features, weighted_features = self.encode_images(images)
+            image_features = self.encode_images(images)
 
         new_input_embeds = []
-        new_weighted_embeds = []  # Added for weighted_features
         new_labels = [] if labels is not None else None
         cur_image_idx = 0
-
         for batch_idx, cur_input_ids in enumerate(input_ids):
             if (cur_input_ids == IMAGE_TOKEN_INDEX).sum() == 0:
+                # multimodal LLM, but the current sample is not multimodal
+                # FIXME: this is a hacky fix, for deepspeed zero3 to work
                 half_len = cur_input_ids.shape[0] // 2
                 cur_image_features = image_features[cur_image_idx]
-                cur_weighted_features = weighted_features[cur_image_idx]  # Added for weighted_features
-
                 cur_input_embeds_1 = self.get_model().embed_tokens(cur_input_ids[:half_len])
                 cur_input_embeds_2 = self.get_model().embed_tokens(cur_input_ids[half_len:])
                 cur_input_embeds = torch.cat([cur_input_embeds_1, cur_image_features[0:0], cur_input_embeds_2], dim=0)
-
-                cur_weighted_embeds = torch.cat([cur_input_embeds_1, cur_weighted_features[0:0], cur_input_embeds_2], dim=0)  # Added for weighted_features
-
                 new_input_embeds.append(cur_input_embeds)
-                new_weighted_embeds.append(cur_weighted_embeds)  # Added for weighted_features
-
                 if labels is not None:
                     new_labels.append(labels[batch_idx])
                 cur_image_idx += 1
                 continue
-
             image_token_indices = torch.where(cur_input_ids == IMAGE_TOKEN_INDEX)[0]
             cur_new_input_embeds = []
-            cur_new_weighted_embeds = []  # Added for weighted_features
-
             if labels is not None:
                 cur_labels = labels[batch_idx]
                 cur_new_labels = []
                 assert cur_labels.shape == cur_input_ids.shape
-
             while image_token_indices.numel() > 0:
                 cur_image_features = image_features[cur_image_idx]
-                cur_weighted_features = weighted_features[cur_image_idx]  # Added for weighted_features
-
                 image_token_start = image_token_indices[0]
 
                 if getattr(self.config, 'tune_mm_mlp_adapter', False) and getattr(self.config, 'mm_use_im_start_end', False):
                     cur_new_input_embeds.append(self.get_model().embed_tokens(cur_input_ids[:image_token_start-1]).detach())
-                    cur_new_weighted_embeds.append(self.get_model().embed_tokens(cur_input_ids[:image_token_start-1]).detach())  # Added for weighted_features
-
                     cur_new_input_embeds.append(self.get_model().embed_tokens(cur_input_ids[image_token_start-1:image_token_start]))
-                    cur_new_weighted_embeds.append(self.get_model().embed_tokens(cur_input_ids[image_token_start-1:image_token_start]))  # Added for weighted_features
-
                     cur_new_input_embeds.append(cur_image_features)
-                    cur_new_weighted_embeds.append(cur_weighted_features)  # Added for weighted_features
-
                     cur_new_input_embeds.append(self.get_model().embed_tokens(cur_input_ids[image_token_start+1:image_token_start+2]))
-                    cur_new_weighted_embeds.append(self.get_model().embed_tokens(cur_input_ids[image_token_start+1:image_token_start+2]))  # Added for weighted_features
-
                     if labels is not None:
                         cur_new_labels.append(cur_labels[:image_token_start])
                         cur_new_labels.append(torch.full((cur_image_features.shape[0],), IGNORE_INDEX, device=labels.device, dtype=labels.dtype))
                         cur_new_labels.append(cur_labels[image_token_start:image_token_start+1])
                         cur_labels = cur_labels[image_token_start+2:]
-
                 else:
                     cur_new_input_embeds.append(self.get_model().embed_tokens(cur_input_ids[:image_token_start]))
-                    cur_new_weighted_embeds.append(self.get_model().embed_tokens(cur_input_ids[:image_token_start]))  # Added for weighted_features
-
                     cur_new_input_embeds.append(cur_image_features)
-                    cur_new_weighted_embeds.append(cur_weighted_features)  # Added for weighted_features
-
                     if labels is not None:
                         cur_new_labels.append(cur_labels[:image_token_start])
                         cur_new_labels.append(torch.full((cur_image_features.shape[0],), IGNORE_INDEX, device=labels.device, dtype=labels.dtype))
                         cur_labels = cur_labels[image_token_start+1:]
-                
                 cur_image_idx += 1
-
                 if getattr(self.config, 'tune_mm_mlp_adapter', False) and getattr(self.config, 'mm_use_im_start_end', False):
                     cur_input_ids = cur_input_ids[image_token_start+2:]
                 else:
                     cur_input_ids = cur_input_ids[image_token_start+1:]
-
                 image_token_indices = torch.where(cur_input_ids == IMAGE_TOKEN_INDEX)[0]
-
             if cur_input_ids.numel() > 0:
                 if getattr(self.config, 'tune_mm_mlp_adapter', False) and getattr(self.config, 'mm_use_im_start_end', False):
                     cur_new_input_embeds.append(self.get_model().embed_tokens(cur_input_ids).detach())
-                    cur_new_weighted_embeds.append(self.get_model().embed_tokens(cur_input_ids).detach())  # Added for weighted_features
                 else:
                     cur_new_input_embeds.append(self.get_model().embed_tokens(cur_input_ids))
-                    cur_new_weighted_embeds.append(self.get_model().embed_tokens(cur_input_ids))  # Added for weighted_features
-
                 if labels is not None:
                     cur_new_labels.append(cur_labels)
-
             cur_new_input_embeds = [x.to(device=self.device) for x in cur_new_input_embeds]
-            cur_new_weighted_embeds = [x.to(device=self.device) for x in cur_new_weighted_embeds]  # Added for weighted_features
-
             cur_new_input_embeds = torch.cat(cur_new_input_embeds, dim=0)
-            cur_new_weighted_embeds = torch.cat(cur_new_weighted_embeds, dim=0)  # Added for weighted_features
-
             new_input_embeds.append(cur_new_input_embeds)
-            new_weighted_embeds.append(cur_new_weighted_embeds)  # Added for weighted_features
-
             if labels is not None:
                 cur_new_labels = torch.cat(cur_new_labels, dim=0)
                 new_labels.append(cur_new_labels)
@@ -221,17 +170,10 @@ class LlavaMetaForCausalLM(ABC):
             max_len = max(x.shape[0] for x in new_input_embeds)
 
             new_input_embeds_align = []
-            new_weighted_embeds_align = []  # Added for weighted_features
-
-            for cur_new_embed, cur_new_weighted_embed in zip(new_input_embeds, new_weighted_embeds):
+            for cur_new_embed in new_input_embeds:
                 cur_new_embed = torch.cat((cur_new_embed, torch.zeros((max_len - cur_new_embed.shape[0], cur_new_embed.shape[1]), dtype=cur_new_embed.dtype, device=cur_new_embed.device)), dim=0)
-                cur_new_weighted_embed = torch.cat((cur_new_weighted_embed, torch.zeros((max_len - cur_new_weighted_embed.shape[0], cur_new_weighted_embed.shape[1]), dtype=cur_new_weighted_embed.dtype, device=cur_new_weighted_embed.device)), dim=0)  # Added for weighted_features
-
                 new_input_embeds_align.append(cur_new_embed)
-                new_weighted_embeds_align.append(cur_new_weighted_embed)  # Added for weighted_features
-
             new_input_embeds = torch.stack(new_input_embeds_align, dim=0)
-            new_weighted_embeds = torch.stack(new_weighted_embeds_align, dim=0)  # Added for weighted_features
 
             if labels is not None:
                 new_labels_align = []
@@ -250,21 +192,17 @@ class LlavaMetaForCausalLM(ABC):
                     new_attention_mask.append(cur_new_attention_mask)
                 attention_mask = torch.stack(new_attention_mask, dim=0)
                 assert attention_mask.shape == new_labels.shape
-
         else:
             new_input_embeds = torch.stack(new_input_embeds, dim=0)
-            new_weighted_embeds = torch.stack(new_weighted_embeds, dim=0)  # Added for weighted_features
-        
             if labels is not None:
-                new_labels = torch.stack(new_labels, dim=0)
+                new_labels  = torch.stack(new_labels, dim=0)
 
             if attention_mask is not None:
                 new_attn_mask_pad_left = torch.full((attention_mask.shape[0], new_input_embeds.shape[1] - input_ids.shape[1]), True, dtype=attention_mask.dtype, device=attention_mask.device)
                 attention_mask = torch.cat((new_attn_mask_pad_left, attention_mask), dim=1)
                 assert attention_mask.shape == new_input_embeds.shape[:2]
 
-        return None, attention_mask, past_key_values, new_input_embeds, new_weighted_embeds, new_labels  # Updated to return weighted_features
-
+        return None, attention_mask, past_key_values, new_input_embeds, new_labels
 
     def initialize_vision_tokenizer(self, model_args, tokenizer):
         if model_args.mm_use_im_patch_token:
@@ -309,7 +247,3 @@ class LlavaMetaForCausalLM(ABC):
                     p.requires_grad = False
                 for p in self.get_output_embeddings().parameters():
                     p.requires_grad = False
-
-
-
-        
