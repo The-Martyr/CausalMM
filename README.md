@@ -38,7 +38,9 @@ Or you can simply build the LLaVA-1.5 environment following [VCD](https://github
 
 1. Download POPE bench ([COCO2014](https://huggingface.co/datasets/HuggingFaceM4/COCO) / [AOKVQA](https://huggingface.co/datasets/HuggingFaceM4/A-OKVQA) to Dir CausalMM (like CausalMM/COCO/val2014).
 
-2. Run the script (with one GPU <default 0>)
+2. Download [LLaVA-v1.5-7b](https://huggingface.co/liuhaotian/llava-v1.5-7b) to Dir CausalMM (like CausalMM/llava-v1.5-7b).
+
+3. Run the script (with one GPU <default 0>).
 ```
 conda activate causalmm_llava
 cd llava-1.5/experiments/scripts
