@@ -12,9 +12,9 @@ Full paper can be found at: [https://arxiv.org/abs/2410.04780](https://arxiv.org
 </div>
 
 ## 🗓 To-Do List
- ✅ Full code release (llava with vision)
- ✅ Key code for editing attention released
- ✅ Preprint of the paper released, check it [here](https://arxiv.org/abs/2410.04780)
+- ✅ Full code release (llava with vision)
+- ✅ Key code for editing attention released
+- ✅ Preprint of the paper released, check it [here](https://arxiv.org/abs/2410.04780)
 
 ## Intro
 We propose a framework called **CausalMM** to help MLLM/LVLM alleviate the multimodal hallucination caused by prior knowledge of visual, language and other modalities, with a maximum score improvement of 65.3% on 6 VLind-Bench indicators and 164 points on MME Benchmark compared to conventional methods.
