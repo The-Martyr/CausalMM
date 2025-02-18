@@ -192,11 +192,12 @@ If you want to learn more about the work on modal priors, click [here](https://g
 ## Citation
 Welcome to star our repo and cite our work:
 ```
-@article{zhou2024mitigating,
+@inproceedings{
+  zhou2025mitigating,
   title={Mitigating Modality Prior-Induced Hallucinations in Multimodal Large Language Models via Deciphering Attention Causality},
-  author={Zhou, Guanyu and Yan, Yibo and Zou, Xin and Wang, Kun and Liu, Aiwei and Hu, Xuming},
-  journal={arXiv preprint arXiv:2410.04780},
-  year={2024}
+  author={Guanyu Zhou and Yibo Yan and Xin Zou and Kun Wang and Aiwei Liu and Xuming Hu},
+  booktitle={The Thirteenth International Conference on Learning Representations},
+  year={2025}
 }
 ```
 
