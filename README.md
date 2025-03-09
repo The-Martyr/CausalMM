@@ -12,6 +12,7 @@ Full paper can be found at: [https://arxiv.org/abs/2410.04780](https://arxiv.org
 </div>
 
 ## 🗓 To-Do List
+- ✅ The video talk is now public, check it on [bilibili](https://www.bilibili.com/video/BV1YkRAYVEHy/?spm_id_from=333.1007.top_right_bar_window_default_collection.content.click&vd_source=ffc139b7b13aa7195dd7b37795efa6a9)
 - ✅ Full code release (llava with vision)
 - ✅ Key code for editing attention released
 - ✅ Preprint of the paper released, check it [here](https://arxiv.org/abs/2410.04780)
