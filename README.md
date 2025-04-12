@@ -12,6 +12,7 @@ Full paper can be found at: [https://arxiv.org/abs/2410.04780](https://arxiv.org
 </div>
 
 ## 🗓 To-Do List
+- ✅ English version of the introduction video: [ICLR](https://iclr.cc/virtual/2025/poster/30629)
 - ✅ The video talk is now public, check it on [bilibili](https://www.bilibili.com/video/BV1YkRAYVEHy/?spm_id_from=333.1007.top_right_bar_window_default_collection.content.click&vd_source=ffc139b7b13aa7195dd7b37795efa6a9)
 - ✅ Full code release (llava with vision)
 - ✅ Key code for editing attention released
