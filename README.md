@@ -21,9 +21,9 @@ Full paper can be found at: [https://arxiv.org/abs/2410.04780](https://arxiv.org
 ## Intro
 We propose a framework called **CausalMM** to help MLLM/LVLM alleviate the multimodal hallucination caused by prior knowledge of visual, language and other modalities, with a maximum score improvement of 65.3% on 6 VLind-Bench indicators and 164 points on MME Benchmark compared to conventional methods.
 
-## Structural Causal Model
+## Poster
 <p align="center" width="100%">
-<a target="_blank"><img src="imgs/causal_graph.png" alt="SCM" style="width: 80%; min-width: 200px; display: block; margin: auto;"></a>
+<a target="_blank"><img src="imgs/poster.png" alt="poster" style="width: 100%; min-width: 200px; display: block; margin: auto;"></a>
 </p>
 
 ## Environment Setup
@@ -48,6 +48,11 @@ conda activate causalmm_llava
 cd llava-1.5/experiments/scripts
 CUDA_VISIBLE_DEVICES=0 bash llava1.5_eval.bash
 ```
+
+## Structural Causal Model
+<p align="center" width="100%">
+<a target="_blank"><img src="imgs/causal_graph.png" alt="SCM" style="width: 80%; min-width: 200px; display: block; margin: auto;"></a>
+</p>
 
 ## Counterfactual Attention
 
