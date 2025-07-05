@@ -48,6 +48,7 @@ conda activate causalmm_llava
 cd llava-1.5/experiments/scripts
 CUDA_VISIBLE_DEVICES=0 bash llava1.5_eval.bash
 ```
+For MME Bench, switch to this [file](llava-1.5/experiments/eval/object_hallucination_vqa_llava_mme.py).
 
 ## Structural Causal Model
 <p align="center" width="100%">
